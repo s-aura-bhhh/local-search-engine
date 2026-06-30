@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Engine</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <span class="logo">SearchEngine</span>
+    <div class="search-row">
+      <input id="q" type="text" placeholder='Try: "hash map" or data structure or mutex'>
+      <button class="btn-search" onclick="doSearch()">Search</button>
+    </div>
+    <button class="btn-rebuild" onclick="rebuildIndex()" title="re-read data/ folder and rebuild index">
+      Rebuild
+    </button>
+  </div>
+</div>
+
+<div class="results-area" id="results-area">
+  <div class="state-msg">Enter a query above to search your documents.</div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
