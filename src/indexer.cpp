@@ -1,4 +1,5 @@
 // g++ -std=c++17 -O2 -Wall -Wextra -o src/indexer src/indexer.cpp
+// command to build the code
 
 #include <iostream>
 #include <fstream>
