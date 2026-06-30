@@ -83,6 +83,31 @@ the index is a hash map: `word -> doc_id -> list of positions`
 | delta + varint compression | ~3-4x smaller posting lists on disk and in memory |
 | single-pass line fetch (`getLinesSinglePass`) | reads each needed file once, not once per matched line |
 
+## TF-IDF Ranking
+ 
+ranked results are scored with TF-IDF, summed across all query words:
+ 
+```
+score(doc) = Σ  tf(word, doc) × idf(word)
+ 
+tf(word, doc)  = number of times word appears in doc
+idf(word)      = log2(total_docs / docs_containing_word)
+```
+ 
+- a word that's rare across the collection (low `docs_containing_word`) gets
+  a higher idf, so it counts for more — this is what stops common words from
+  dominating the ranking.
+- a word that appears many times *in one doc* raises that doc's score via
+  `tf`, so a doc using the word repeatedly ranks above one that mentions it
+  once.
+**example** — 4 docs total, searching `"mutex"`:
+- `"mutex"` appears in 2 of the 4 docs → `idf = log2(4/2) = 1`
+- doc A has `"mutex"` 3 times → `score = 3 × 1 = 3`
+- doc B has `"mutex"` 1 time → `score = 1 × 1 = 1`
+- doc A ranks above doc B.
+for multi-word queries, scores from each word are added together, so a doc
+matching both query words outscores one matching only the rarer of the two.
+
 ## Delta + Varint compression
 
 storing every word position as a raw 4-byte int wastes space, since
